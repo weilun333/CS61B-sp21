@@ -5,7 +5,7 @@ import java.util.Observable;
 
 
 /** The state of a game of 2048.
- *  @author TODO: YOUR NAME HERE
+ *  @author wei
  */
 public class Model extends Observable {
     /** Current contents of the board. */
@@ -137,7 +137,13 @@ public class Model extends Observable {
      *  Empty spaces are stored as null.
      * */
     public static boolean emptySpaceExists(Board b) {
-        // TODO: Fill in this function.
+        for (int i = 0; i < b.size(); i++) {
+            for (int j = 0; j < b.size(); j++) {
+                if (b.tile(i, j) == null) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -147,7 +153,14 @@ public class Model extends Observable {
      * given a Tile object t, we get its value with t.value().
      */
     public static boolean maxTileExists(Board b) {
-        // TODO: Fill in this function.
+        for (int i = 0; i < b.size(); i += 1) {
+            for (int j = 0; j < b.size(); j += 1) {
+                Tile temp = b.tile(i, j);
+                if (temp != null && temp.value() == MAX_PIECE) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -158,7 +171,34 @@ public class Model extends Observable {
      * 2. There are two adjacent tiles with the same value.
      */
     public static boolean atLeastOneMoveExists(Board b) {
-        // TODO: Fill in this function.
+        if (emptySpaceExists(b)) {
+            return true;
+        }
+        int maxIndex = b.size() - 1;
+        /* 與右邊或下方的值是否相等 */
+        for (int i = 0; i < maxIndex; i += 1) {
+            for (int j = 0; j < maxIndex; j += 1) {
+                Tile rightTile = b.tile(i, j + 1);
+                Tile downTile = b.tile(i + 1, j);
+                if (b.tile(i, j).value() == rightTile.value()) {
+                    return true;
+                } else if (b.tile(i, j).value() == downTile.value()) {
+                    return true;
+                }
+            }
+        }
+        /* 最下排 */
+        for (int i = maxIndex, j = 0; j < maxIndex; j += 1){
+            if (b.tile(i, j).value() == b.tile(i, j + 1).value()) {
+                return true;
+            }
+        }
+        /* 最右排 */
+        for (int i = 0, j = maxIndex; i < maxIndex; i += 1){
+            if (b.tile(i, j).value() == b.tile(i + 1, j).value()) {
+                return true;
+            }
+        }
         return false;
     }
 
